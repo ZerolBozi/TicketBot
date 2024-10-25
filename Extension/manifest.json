@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "TixCraft Booking Assistant",
+  "version": "1.0",
+  "description": "TixCraft ticket booking automation assistant",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://tixcraft.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "host_permissions": [
+    "https://tixcraft.com/*",
+    "http://localhost:5000/*"
+  ]
+}

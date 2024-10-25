@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TixCraft Booking Assistant</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .timer-group {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .timer-group h3 {
+      margin-bottom: 12px;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .timer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .timer-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="time"],
+    select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    input[type="time"] {
+      width: 120px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .primary-button {
+      background-color: #1a73e8;
+      color: white;
+    }
+
+    .primary-button:hover:not(:disabled) {
+      background-color: #1557b0;
+    }
+
+    .secondary-button {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .secondary-button:hover:not(:disabled) {
+      background-color: #c82333;
+    }
+
+    .delete-btn {
+      padding: 4px 8px;
+      background-color: #dc3545;
+      color: white;
+      font-size: 12px;
+    }
+
+    .status {
+      padding: 12px;
+      border-radius: 4px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status.inactive {
+      background-color: #f8f9fa;
+      color: #6c757d;
+    }
+
+    .status.active {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .status.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .next-run,
+    .countdown {
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    #addTimeBtn {
+      background-color: #28a745;
+      color: white;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    #addTimeBtn:hover:not(:disabled) {
+      background-color: #218838;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <form id="settingsForm">
+      <div class="timer-group">
+        <h3>定時執行設定</h3>
+        <div id="timerList" class="timer-list"></div>
+        <div class="timer-item">
+          <input type="time" id="newTime" step="1">
+          <button type="button" id="addTimeBtn" class="add-time">新增時間</button>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="enableTimer">
+          <label for="enableTimer">啟用定時執行</label>
+        </div>
+        <div id="nextRun" class="next-run"></div>
+        <div id="countdown" class="countdown"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="showId">節目資訊</label>
+        <input type="text" id="showId" required placeholder="請輸入節目代碼">
+      </div>
+
+      <div class="form-group">
+        <label for="keyword">區域關鍵字</label>
+        <input type="text" id="keyword" required placeholder="例：一樓">
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">票數</label>
+        <select id="quantity" required>
+          <option value="1">1張</option>
+          <option value="2">2張</option>
+          <option value="3">3張</option>
+          <option value="4">4張</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="session">場次選擇</label>
+        <input type="number" id="session" min="1" value="1" required>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" id="startButton" class="primary-button">啟動搶票</button>
+        <button type="button" id="stopButton" class="secondary-button" disabled>停止搶票</button>
+      </div>
+    </form>
+
+    <div id="status" class="status inactive">
+      搶票腳本未啟用
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
